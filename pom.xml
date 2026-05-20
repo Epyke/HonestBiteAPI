@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.honestbite</groupId>
-    <artifactId>HonestBiteAPI</artifactId>
+    <artifactId>www</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>HonestBiteAPI</name>
-    <description>HonestBiteAPI</description>
+    <name>www</name>
+    <description>www</description>
     <url/>
     <licenses>
         <license/>
