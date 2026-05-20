@@ -9,5 +9,5 @@ public class HonestBiteApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(HonestBiteApiApplication.class, args);
     }
-
+    
 }
