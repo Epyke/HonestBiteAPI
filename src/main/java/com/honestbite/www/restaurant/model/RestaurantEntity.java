@@ -5,7 +5,6 @@ import com.honestbite.www.category.model.CategoryEntity;
 import com.honestbite.www.ophour.model.OpHourEntity;
 import com.honestbite.www.rating.model.RatingEntity;
 import com.honestbite.www.request.model.RequestEntity;
-import com.honestbite.www.section.model.SectionEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,9 +34,6 @@ public class RestaurantEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "adress_id")
     private AdressEntity address;
-
-    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
-    private List<SectionEntity> sections = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private List<OpHourEntity> operatingHours = new ArrayList<>();

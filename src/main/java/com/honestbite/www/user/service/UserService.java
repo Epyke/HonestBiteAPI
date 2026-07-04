@@ -1,44 +1,47 @@
 package com.honestbite.www.user.service;
 
+import com.honestbite.www.auth.service.JWTService;
+import com.honestbite.www.user.dto.UserDTO;
 import com.honestbite.www.user.model.UserEntity;
 import com.honestbite.www.user.persistence.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Autowired
+    private JWTService jwtService;
+
+    @Autowired
+    private AuthenticationManager authManager;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public UserEntity register(UserDTO.Register user){
+        UserEntity newUser = new UserEntity();
+        newUser.setPassword(encoder.encode(user.getPassword()));
+        newUser.setEmail(user.getEmail());
+        newUser.setUsername(user.getUsername());
+        return userRepository.save(newUser);
     }
 
-    public String verifyExistingUsers(String userName, String email, String password){
+    public UserDTO.LoginOutput verify(UserDTO.LoginInput user) {
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
-        if(userName == null || userName.trim().isEmpty()){
-            return "Username is required";
+        if(authentication.isAuthenticated()){
+            return new UserDTO.LoginOutput(jwtService.generateToken(user.getEmail()));
         }
 
-        if(email == null || email.trim().isEmpty()){
-            return "Email is required";
-        }
-
-        if(password == null || password.trim().isEmpty()){
-            return "Password is required";
-        }
-
-        if(userRepository.existsByUsername(userName) || userRepository.existsByEmail(email)){
-            return "User already exists";
-        }
-
-        UserEntity newUser = UserEntity.builder().username(userName).email(email).password(password).build();
-
-        log.info(newUser.toString());
-
-        userRepository.save(newUser);
-
-        return "User created sucessfully";
+        return new UserDTO.LoginOutput("Fail");
     }
 }

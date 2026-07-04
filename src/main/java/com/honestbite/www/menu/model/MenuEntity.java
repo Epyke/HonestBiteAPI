@@ -1,6 +1,5 @@
 package com.honestbite.www.menu.model;
 
-import com.honestbite.www.section.model.SectionEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +18,6 @@ public class MenuEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String name;
-    String description;
-    BigDecimal price;
+    String imgCover;
     Boolean isAvailable;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id")
-    private SectionEntity section;
 }

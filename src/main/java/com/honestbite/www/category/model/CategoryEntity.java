@@ -19,7 +19,6 @@ public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String name;
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)

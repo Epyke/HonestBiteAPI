@@ -4,9 +4,7 @@ import com.honestbite.www.rating.model.RatingEntity;
 import com.honestbite.www.request.model.RequestEntity;
 import com.honestbite.www.role.model.RoleEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +13,8 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 @Table(name = "users")
 @Entity
@@ -27,9 +27,6 @@ public class UserEntity {
     String username;
     String email;
     String password;
-    String firstName;
-    String lastName;
-    String phoneNumber;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
