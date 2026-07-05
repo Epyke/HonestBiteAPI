@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +21,18 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
+    @Value("${app.jwt.secret}")
     private String secretKey;
 
     public JWTService(){
-        KeyGenerator keyGen = null;
-        try {
-            keyGen = KeyGenerator.getInstance("HmacSHA256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        SecretKey sk = keyGen.generateKey();
-        secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
+//        KeyGenerator keyGen = null;
+//        try {
+//            keyGen = KeyGenerator.getInstance("HmacSHA256");
+//        } catch (NoSuchAlgorithmException e) {
+//            throw new RuntimeException(e);
+//        }
+//        SecretKey sk = keyGen.generateKey();
+//        secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
     }
 
     public String generateToken(String email) {
@@ -40,7 +42,7 @@ public class JWTService {
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(getKey())
                 .compact();
     }
@@ -51,7 +53,6 @@ public class JWTService {
     }
 
     public String extractEmail(String token) {
-        // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
     }
 
