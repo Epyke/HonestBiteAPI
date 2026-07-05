@@ -18,7 +18,9 @@ public class CategoryService {
         return categoryRepository.findAll().stream()
                 .map(entity -> CategoryDTO.GetOutput.builder()
                         .id(entity.getId())
-                        .name(entity.getName())
+                        .label(entity.getLabel())
+                        .value(entity.getValue())
+                        .color(entity.getColor())
                         .build())
                 .collect(Collectors.toList());
     }

@@ -10,6 +10,8 @@ public class CategoryDTO {
     @Builder
     public static class GetOutput {
         private Long id;
-        private String name;
+        private String label;
+        private String value;
+        private String color;
     }
 }

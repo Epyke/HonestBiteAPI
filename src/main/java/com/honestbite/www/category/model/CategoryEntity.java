@@ -21,7 +21,9 @@ public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String name;
+    String label;
+    String value;
+    String color;
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private Set<RestaurantEntity> restaurants = new HashSet<>();
