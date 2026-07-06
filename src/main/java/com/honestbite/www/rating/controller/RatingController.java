@@ -3,7 +3,6 @@ package com.honestbite.www.rating.controller;
 import com.honestbite.www.rating.dto.RatingDTO;
 import com.honestbite.www.rating.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

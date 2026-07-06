@@ -3,6 +3,7 @@ package com.honestbite.www._configuration;
 import com.honestbite.www.auth.config.JwtFilter;
 import com.honestbite.www.auth.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,19 +30,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
-        return http.csrf(customizer -> customizer.disable())
-                    .authorizeHttpRequests(request -> request
-                            .requestMatchers("/api/users/register", "/api/users/login", "/api/restaurants/**", "/api/categories/**").permitAll()
-                            .requestMatchers(
-                                    "/api/favorites",
-                                    "/api/favorites/**",
-                                    "/api/ratings",
-                                    "/api/ratings/**"
-                            ).authenticated()
-                            .anyRequest().authenticated())
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                    .build();
+        return http
+                .csrf(customizer -> customizer.disable())
+                .authorizeHttpRequests(request -> request
+
+                        .requestMatchers("/api/users/register", "/api/users/login", "/api/restaurants/**", "/api/categories/**", "/error").permitAll()
+                        .requestMatchers(
+                                "/api/favorites",
+                                "/api/favorites/**",
+                                "/api/ratings",
+                                "/api/ratings/**"
+                        ).authenticated()
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
@@ -54,5 +57,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public FilterRegistrationBean<JwtFilter> jwtFilterRegistration(JwtFilter filter) {
+        FilterRegistrationBean<JwtFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
     }
 }

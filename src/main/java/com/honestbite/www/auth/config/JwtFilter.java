@@ -32,17 +32,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String email = null;
 
-        // DEBUG LOG 1
-        System.out.println("====== JWT FILTER START ======");
-        System.out.println("Authorization Header: " + authHeader);
-
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
             try {
                 email = jwtService.extractEmail(token);
-                System.out.println("Extracted Email from Token: " + email); // DEBUG LOG 2
             } catch (Exception e) {
-                System.out.println("Token parsing failed: " + e.getMessage());
+                // ignore invalid token; request will proceed unauthenticated
             }
         }
 
@@ -50,17 +45,13 @@ public class JwtFilter extends OncePerRequestFilter {
             UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(email);
             boolean isValid = jwtService.validateToken(token, userDetails);
 
-            System.out.println("Is Token Valid against UserDetails? " + isValid); // DEBUG LOG 3
-
             if(isValid){
                 UsernamePasswordAuthenticationToken authtoken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authtoken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authtoken);
-                System.out.println("SecurityContext successfully authenticated!");
             }
         }
 
-        System.out.println("====== JWT FILTER END ======");
         filterChain.doFilter(request, response);
     }
 
