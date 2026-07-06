@@ -34,7 +34,7 @@ public class RestaurantDTO {
         Double global;
 
         List<OpHourDTO> schedule;
-        List<RatingDTO> reviews;
+        List<RatingDTO.DisplayReview> reviews;
         List<String> menuPhotos;
     }
 

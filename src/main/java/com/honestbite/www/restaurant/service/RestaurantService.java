@@ -64,19 +64,18 @@ public class RestaurantService {
         // 2. Map Reviews
         // DateTimeFormatter handles transforming LocalDateTime to a string like "Maio 2025"
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
-        List<RatingDTO> reviews = entity.getRatings().stream()
-                .map(rating -> RatingDTO.builder()
-                        .id("r" + rating.getId())
-                        .userName(rating.getUser().getUsername())
+        List<RatingDTO.DisplayReview> reviews = entity.getRatings().stream()
+                .map(rating -> RatingDTO.DisplayReview.builder()
+                        .id(rating.getId())
+                        .username(rating.getUser().getUsername())
                         .score(rating.getScore())
                         .createdAt(rating.getCreatedAt() != null ? rating.getCreatedAt().format(formatter) : "")
                         .comment(rating.getComment())
                         .build())
                 .collect(Collectors.toList());
 
-        // 3. Calculate Global Average Score
         Double globalScore = reviews.stream()
-                .mapToDouble(RatingDTO::getScore)
+                .mapToDouble(RatingDTO.DisplayReview::getScore) // FIXED: Map directly from your clean DisplayReview items list
                 .average()
                 .orElse(0.0);
 

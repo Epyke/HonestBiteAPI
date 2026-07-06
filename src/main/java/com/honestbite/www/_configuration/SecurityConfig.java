@@ -32,7 +32,12 @@ public class SecurityConfig {
         return http.csrf(customizer -> customizer.disable())
                     .authorizeHttpRequests(request -> request
                             .requestMatchers("/api/users/register", "/api/users/login", "/api/restaurants/**", "/api/categories/**").permitAll()
-                            .requestMatchers("/api/favorites/**").hasAuthority("USER")
+                            .requestMatchers(
+                                    "/api/favorites",
+                                    "/api/favorites/**",
+                                    "/api/ratings",
+                                    "/api/ratings/**"
+                            ).authenticated()
                             .anyRequest().authenticated())
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
