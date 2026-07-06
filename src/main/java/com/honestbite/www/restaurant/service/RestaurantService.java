@@ -34,7 +34,14 @@ public class RestaurantService {
                             .avgPrice(entity.getAvgPrice())
                             .global(Math.round(globalScore * 10.0) / 10.0)
                             .adress(entity.getAddress())
-                            .categories(new ArrayList<>(entity.getCategories()))
+                            .categories(entity.getCategories().stream()
+                                    .map(cat -> com.honestbite.www.category.dto.CategoryDTO.GetOutput.builder()
+                                            .id(cat.getId())
+                                            .label(cat.getLabel()) // Adjust these field mappings to match your exact CategoryDTO.GetOutput builder fields
+                                            .value(cat.getValue())
+                                            .color(cat.getColor())
+                                            .build())
+                                    .collect(Collectors.toList()))
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -120,6 +127,50 @@ public class RestaurantService {
                             .collect(Collectors.joining(" | "));
 
                     return new OpHourDTO(dayName, hoursString);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<RestaurantDTO.GetOutputAllRest> fetchRestaurantsFiltered(String name, Long categoryId) {
+        return restaurantRepository.findAll().stream()
+                // Filter 1: Check by text string matching name
+                .filter(entity -> {
+                    if (name != null && !name.isBlank()) {
+                        return entity.getName().toLowerCase().contains(name.toLowerCase());
+                    }
+                    return true;
+                })
+                // Filter 2: Check by Category Primary Key ID
+                .filter(entity -> {
+                    if (categoryId != null) {
+                        // Assumes entity.getCategories() returns a list of Category entities
+                        return entity.getCategories().stream()
+                                .anyMatch(category -> category.getId().equals(categoryId));
+                    }
+                    return true;
+                })
+                // Map the results back to the target list format
+                .map(entity -> {
+                    Double globalScore = entity.getRatings().stream()
+                            .mapToDouble(rating -> rating.getScore())
+                            .average()
+                            .orElse(0.0);
+
+                    return RestaurantDTO.GetOutputAllRest.builder()
+                            .id(entity.getId())
+                            .name(entity.getName())
+                            .avgPrice(entity.getAvgPrice())
+                            .global(Math.round(globalScore * 10.0) / 10.0)
+                            .adress(entity.getAddress())
+                            .categories(entity.getCategories().stream()
+                                    .map(cat -> com.honestbite.www.category.dto.CategoryDTO.GetOutput.builder()
+                                            .id(cat.getId())
+                                            .label(cat.getLabel()) // Adjust these field mappings to match your exact CategoryDTO.GetOutput builder fields
+                                            .value(cat.getValue())
+                                            .color(cat.getColor())
+                                            .build())
+                                    .collect(Collectors.toList()))
+                            .build();
                 })
                 .collect(Collectors.toList());
     }

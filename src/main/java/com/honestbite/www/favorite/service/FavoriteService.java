@@ -52,7 +52,6 @@ public class FavoriteService {
         }
     }
 
-    @Transactional(readOnly = true)
     public FavoriteDTO.StatusResponse getFavoriteStatus(Long userId, Long restaurantId) {
         return new FavoriteDTO.StatusResponse(favoriteRepository.existsByUserIdAndRestaurantId(userId, restaurantId));
     }
@@ -69,11 +68,17 @@ public class FavoriteService {
                 .avgPrice(entity.getAvgPrice())
                 .global(Math.round(globalScore * 10.0) / 10.0)
                 .adress(entity.getAddress())
-                .categories(new ArrayList<>(entity.getCategories()))
+                .categories(entity.getCategories().stream()
+                        .map(cat -> com.honestbite.www.category.dto.CategoryDTO.GetOutput.builder()
+                                .id(cat.getId())
+                                .label(cat.getLabel()) // Adjust these field mappings to match your exact CategoryDTO.GetOutput builder fields
+                                .value(cat.getValue())
+                                .color(cat.getColor())
+                                .build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 
-    @Transactional(readOnly = true)
     public List<FavoriteDTO.UserFavoriteListOutput> getFavoritesByUser(Long userId) {
         return favoriteRepository.findByUserId(userId).stream()
                 .map(entity -> {

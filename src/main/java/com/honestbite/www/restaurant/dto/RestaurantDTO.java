@@ -1,6 +1,7 @@
 package com.honestbite.www.restaurant.dto;
 
 import com.honestbite.www.adress.model.AdressEntity;
+import com.honestbite.www.category.dto.CategoryDTO;
 import com.honestbite.www.category.model.CategoryEntity;
 import com.honestbite.www.ophour.dto.OpHourDTO;
 import com.honestbite.www.rating.dto.RatingDTO;
@@ -46,6 +47,6 @@ public class RestaurantDTO {
         Double avgPrice;
         Double global;
         AdressEntity adress;
-        List<CategoryEntity> categories;
+        List<CategoryDTO.GetOutput> categories;
     }
 }

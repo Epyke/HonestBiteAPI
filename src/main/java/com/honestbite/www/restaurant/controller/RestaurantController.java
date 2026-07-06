@@ -29,4 +29,13 @@ public class RestaurantController {
         }
         return ResponseEntity.ok(output);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<RestaurantDTO.GetOutputAllRest>> getAllRestaurants(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categoryId", required = false) Long categoryId) {
+
+        List<RestaurantDTO.GetOutputAllRest> restaurants = restaurantService.fetchRestaurantsFiltered(name, categoryId);
+        return ResponseEntity.ok(restaurants);
+    }
 }
