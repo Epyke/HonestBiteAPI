@@ -6,6 +6,8 @@ import com.honestbite.www.role.model.RoleEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +29,14 @@ public class UserEntity {
     String username;
     String email;
     String password;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

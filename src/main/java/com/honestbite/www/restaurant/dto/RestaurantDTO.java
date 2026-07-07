@@ -43,6 +43,7 @@ public class RestaurantDTO {
     @Builder
     public static class GetOutputAllRest{
         Long id;
+        String cover;
         String name;
         Double avgPrice;
         Double global;

@@ -36,12 +36,25 @@ public class UserService {
     }
 
     public UserDTO.LoginOutput verify(UserDTO.LoginInput user) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
 
         if(authentication.isAuthenticated()){
-            return new UserDTO.LoginOutput(jwtService.generateToken(user.getEmail()));
+            // 1. Fetch the user details from the database using the email
+            UserEntity dbUser = userRepository.findByEmail(user.getEmail());
+
+            // 2. Build and return the full DTO using the builder pattern
+            return UserDTO.LoginOutput.builder()
+                    .id(dbUser.getId())
+                    .username(dbUser.getUsername())
+                    .email(dbUser.getEmail())
+                    .createdAt(dbUser.getCreatedAt() != null ? dbUser.getCreatedAt().toString() : null)
+                    .token(jwtService.generateToken(user.getEmail()))
+                    .build();
         }
 
-        return new UserDTO.LoginOutput("Fail");
+        // Return a builder with just the fail token, or ideally, throw an exception
+        return UserDTO.LoginOutput.builder().token("Fail").build();
     }
 }

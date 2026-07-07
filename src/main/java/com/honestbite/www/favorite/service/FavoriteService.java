@@ -65,6 +65,7 @@ public class FavoriteService {
         return RestaurantDTO.GetOutputAllRest.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .cover(entity.getCover())
                 .avgPrice(entity.getAvgPrice())
                 .global(Math.round(globalScore * 10.0) / 10.0)
                 .adress(entity.getAddress())

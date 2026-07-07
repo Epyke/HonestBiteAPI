@@ -17,6 +17,10 @@ public class UserDTO {
     @AllArgsConstructor
     @Builder
     public static class LoginOutput{
+        Long id;
+        String username;
+        String email;
+        String createdAt;
         String token;
     }
 
