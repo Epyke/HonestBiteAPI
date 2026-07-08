@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//My favorites
+//My favorites 2
 @RestController
 @RequestMapping("/api/favorites")
 public class FavoriteController {
