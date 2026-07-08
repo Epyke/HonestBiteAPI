@@ -27,7 +27,7 @@ public class UserDTO {
     @Data
     @AllArgsConstructor
     @Builder
-    public static class Register{
+    public static class RegisterInput{
         String username;
         String email;
         String password;

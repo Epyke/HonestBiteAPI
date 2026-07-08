@@ -2,6 +2,7 @@ package com.honestbite.www.user.service;
 
 import com.honestbite.www.auth.service.JWTService;
 import com.honestbite.www.user.dto.UserDTO;
+import com.honestbite.www.user.exception.EmailAlreadyExistsException;
 import com.honestbite.www.user.model.UserEntity;
 import com.honestbite.www.user.persistence.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,11 @@ public class UserService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public UserEntity register(UserDTO.Register user){
+    public UserEntity register(UserDTO.RegisterInput user){
+        if (userRepository.existsByEmail(user.getEmail())){
+            throw new EmailAlreadyExistsException("Email já registado no sistema");
+        }
+
         UserEntity newUser = new UserEntity();
         newUser.setPassword(encoder.encode(user.getPassword()));
         newUser.setEmail(user.getEmail());
